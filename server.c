@@ -20,16 +20,16 @@ int main(int argc, char ** argv)
     struct sockaddr_in client_address;
     int result;
     
- 	if (!argv[1] || !argv[2]) {
-		perror("cmd: ./serv hostname port");
+ 	if ( !argv[1]) {
+		perror("cmd: ./serv port");
 		return 1;
 	}
     
     fd_set readfds, testfds;
     server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//建立服务器端socket 
     server_address.sin_family = AF_INET;
-    server_address.sin_addr.s_addr = inet_addr(atoi(argv[1]));
-    server_address.sin_port = htons(atoi(argv[2]));
+    server_address.sin_addr.s_addr = inet_addr("121.168.56.101");
+    server_address.sin_port = htons(atoi(argv[1]));
     server_len = sizeof(server_address);
     bind(server_sockfd, (struct sockaddr *)&server_address, server_len);
     listen(server_sockfd, 5); //监听队列最多容纳5个 
@@ -69,14 +69,12 @@ int main(int argc, char ** argv)
                	    int nodelay = 1;
                     setsockopt(client_sockfd, IPPROTO_TCP, TCP_NODELAY, &nodelay, sizeof(int));
  
-                    int rc3 = 1;
-                    setsockopt(client_sockfd, SOL_SOCKET, 62 , &rc3, sizeof(int));
+                    int srt = 1;
+                    setsockopt(client_sockfd, SOL_SOCKET, 61 , &srt, sizeof(int));
 
                     int logme = 1;
-                    setsockopt(client_sockfd, SOL_SOCKET, 63, &logme, sizeof(int));
+                    setsockopt(client_sockfd, SOL_SOCKET, 62, &logme, sizeof(int));
 
-                    int logtime = 1;
-                    setsockopt(client_sockfd, SOL_SOCKET, 64, &logtime, sizeof(int));
 
 
                     FD_SET(client_sockfd, &readfds);//将客户端socket加入到集合中
